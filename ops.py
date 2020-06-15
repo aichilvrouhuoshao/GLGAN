@@ -1,4 +1,4 @@
-from glob import glob           		#python自带文件操作模块
+from glob import glob           		#python modules
 import os
 import tensorflow as tf
 import numpy as np
@@ -6,21 +6,21 @@ import cv2
 from config import *
 
 def block_patch(input, margin=5):
-    shape = input.get_shape().as_list()        #input必须为tensor
+    shape = input.get_shape().as_list()        #input must be the tensor
 
     #create patch in random size
-    pad_size = tf.random_uniform([2], minval=15, maxval=25, dtype=tf.int32)  # 返回15-25之间两个数字表示 pad的大小
-    patch = tf.zeros([pad_size[0], pad_size[1], shape[-1]], dtype=tf.float32)# 产生pad的矩阵都由0填满
+    pad_size = tf.random_uniform([2], minval=15, maxval=25, dtype=tf.int32)  # return 15-25 representing the size of pad
+    patch = tf.zeros([pad_size[0], pad_size[1], shape[-1]], dtype=tf.float32)# matrix generate the pad filled with 0
 
     h_ = tf.random_uniform([1], minval=margin, maxval=shape[0]-pad_size[0]-margin, dtype=tf.int32)[0]
     w_ = tf.random_uniform([1], minval=margin, maxval=shape[1]-pad_size[1]-margin, dtype=tf.int32)[0]
 
-    padding = [[h_, shape[0]-h_-pad_size[0]], [w_, shape[1]-w_-pad_size[1]], [0, 0]] #每一维需要填充多少行/列（维数与patch一致）
-    padded = tf.pad(patch, padding, "CONSTANT", constant_values=1)  #填充张量 patch，上面填充h_行0,、下面填充shape[0]-h_-pad_size[0]行0、左边填充w_行0
+    padding = [[h_, shape[0]-h_-pad_size[0]], [w_, shape[1]-w_-pad_size[1]], [0, 0]] #size of every dimention needing to fill(dimention is same as the patch)
+    padded = tf.pad(patch, padding, "CONSTANT", constant_values=1)  #fill the tensor patch，upside filled with h_  0, downside filled with shape[0]-h_-pad_size[0]行0、left fillfill w_ 0
 
     coord = h_, w_
 
-    res = tf.multiply(input, padded)  #对应元素相乘
+    res = tf.multiply(input, padded)  #multiply 
 
     return res, padded, coord, pad_size
 
@@ -34,7 +34,7 @@ def load_train_data(args):
 
     image_reader = tf.WholeFileReader()
     _, image_file = image_reader.read(filename_queue)
-    images = tf.image.decode_jpeg(image_file, channels=3) #读取图片
+    images = tf.image.decode_jpeg(image_file, channels=3) #read in the image 
 
 
     #input image range from -1 to 1
@@ -65,7 +65,7 @@ def load_test_data(args):
     data_count = len(paths)
 
     filename_queue = tf.train.string_input_producer(tf.train.match_filenames_once(paths))
-# tf.train.string_input_producer()方法把所有数据打包成一个自动维护的内部队列，tf每次从这个序列中读取出一部分数据
+# tf.train.string_input_producer()pack the data with a queue, tf read some data from this.
     image_reader = tf.WholeFileReader()
     _, image_file = image_reader.read(filename_queue)
     images = tf.image.decode_jpeg(image_file, channels=3)
@@ -88,7 +88,7 @@ def load_test_data(args):
     orig_imgs, mask, test_imgs = tf.train.batch([orig_images, mask, images],
                                                 batch_size=args.batch_size,
                                                 capacity=args.batch_size,
-                                                )#按顺序读入64个图片
+                                                )#read in 64 images 
 
 
     return orig_imgs, test_imgs, mask, data_count
@@ -98,7 +98,7 @@ def load_result_data(args):
     data_count = len(paths)
 
     filename_queue = tf.train.string_input_producer(tf.train.match_filenames_once(paths))
-    # tf.train.string_input_producer()方法把所有数据打包成一个自动维护的内部队列，tf每次从这个序列中读取出一部分数据
+    # tf.train.string_input_producer()pack the data with a queue, tf read some data from this.
     image_reader = tf.WholeFileReader()
     _, image_file = image_reader.read(filename_queue)
     images = tf.image.decode_jpeg(image_file, channels=3)
@@ -120,7 +120,7 @@ def load_result_data(args):
     orig_imgs, mask, test_imgs = tf.train.batch([orig_images, mask, images],
                                                batch_size=args.batch_size,
                                                capacity=args.batch_size,
-                                               )  # 按顺序读入64个图片,转为64,64,64,3的格式进入训练
+                                               )  # read in 64 images,transfer the format to 64,64,64,3, then training
 
     return orig_imgs, test_imgs, mask, data_count
 
