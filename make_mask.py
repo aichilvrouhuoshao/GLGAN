@@ -11,22 +11,22 @@ def test(args, sess, model):
     saver.restore(sess, last_ckpt)
     ckpt_name = str(last_ckpt)
     print("Loaded model file from " + ckpt_name)
-    #批量读取图片
+    #read the images 
     paths = glob.glob('./testimage_2016/*')
     step = 0
     for path in paths:
-        img = cv2.imread(path)#读入测试图片路径
+        img = cv2.imread(path)#read in the path of the test image 
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         img = cv2.resize(img, (args.input_height, args.input_width))
         orig_test = cv2.resize(img, (args.input_height, args.input_width)) / 127.5 - 1
         # orig_test = cv2.resize(img, (args.input_height, args.input_width))/127.5 - 1
 
-        #####mask过程
+        ##### the mask process
         mask = np.zeros(img.shape)
         color = (255,255,255)
         size = np.random.randint(15 , high=20 ,size=2)
         x= np.random.randint(10 , high =54 - size[0], size = 1)
-        y= np.random.randint(10 , high =54 - size[1], size = 1) #x与y的最小值，
+        y= np.random.randint(10 , high =54 - size[1], size = 1) #the minum of x and y
         img = cv2.rectangle(img,(x[0],y[0]),(x[0]+size[0],y[0]+size[1]),color,-1)
         mask = cv2.rectangle(mask,(x[0],y[0]),(x[0]+size[0],y[0]+size[1]),color,-1)
 
@@ -38,18 +38,12 @@ def test(args, sess, model):
         test_img = np.tile(test_img[np.newaxis,...], [args.batch_size,1,1,1])
         mask = np.tile(test_mask[np.newaxis,...], [args.batch_size,1,1,1])
 
-        # print(x)
-        # print(y)
-        #
-        # cv2.imshow("result", mask)
-        # cv2.waitKey(0)
-
-        ####erase后生成保存图片
+        ####save the images after erase process
 
         # print(orig_test.shape) #(64, 64, 3)
-        orig_test = np.tile(orig_test[np.newaxis, ...], [args.batch_size, 1, 1, 1])  # 将图片格式(64, 64, 3)转化为(64, 64, 64, 3)？
+        orig_test = np.tile(orig_test[np.newaxis, ...], [args.batch_size, 1, 1, 1])  # transfer the format from(64, 64, 3)to(64, 64, 64, 3)
         # print(orig_test.shape) #(64, 64, 64, 3)
-        orig_test = orig_test.astype(np.float32)  # orig_test为均为1 的4维张量
+        orig_test = orig_test.astype(np.float32)  # orig_test are 4-dimention vector 1111
         # print(orig_test.shape) #(64, 64, 64, 3)
         # print(test_img.shape) #(64, 64, 64, 3)
         test_img = test_img.astype(np.float32)
