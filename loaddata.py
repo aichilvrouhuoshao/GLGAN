@@ -3,7 +3,7 @@ import os
 import tensorflow as tf
 import numpy as np
 import cv2 
-from config import *
+from parameter import *
 
 def block_patch(input, margin=5):
     shape = input.get_shape().as_list()        #input must be the tensor
