@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from config import *
+from parameter import *
 from network import *
 import cv2
 
