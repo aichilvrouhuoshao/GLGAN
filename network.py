@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
-from ops import *
-from architecture import *
+from loaddata import *
+from structure import *
 
 
 class network():
