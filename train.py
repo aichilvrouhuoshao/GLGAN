@@ -75,21 +75,13 @@ def train(args, sess, model):
 
         # Check Test image results every time epoch is finished
         if step*args.batch_size >= model.data_count:
-            # saver.save(sess, args.checkpoints_path + "/model", global_step=epoch)
-            # test_res_imgs -->network.py line 53
-            # res_img = sess.run(model.test_res_imgs, feed_dict={model.single_orig:orig_imgs,
-            #                                            model.single_test:test_imgs,
-            #                                            model.single_mask:mask}) #原文中code
-            # res_img = sess.run(model.test_res_imgs)
-
-            # save test img result
-            # img_tile(epoch, args, res_img)
+            # saver.save(sess, args.checkpoints_path + "/model", global_step=epoch) #save every model during training
             step = 0
             epoch += 1
 
         step += 1
         global_step += 1
-    saver.save(sess, args.checkpoints_path + "/model", global_step=epoch)# 只保留最后一个model
+    saver.save(sess, args.checkpoints_path + "/model", global_step=epoch)# only save the last model 
 
     np.save('./loss_plot/tc300_td1_trainstep1000/c_data_2.npy', c_data)
     np.save('./loss_plot/tc300_td1_trainstep1000/d_data_2.npy', d_data)
