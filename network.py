@@ -18,11 +18,11 @@ class network():
 
         #prepare training data
         self.real_img, self.perturbed_img, self.mask, self.coord, self.pads, self.data_count = load_train_data(args)
-        self.orig_img, self.test_img, self.test_mask, self.test_data_count = load_test_data(args)
-        self.orig_img, self.test_img, self.test_mask, self.test_data_count = load_result_data(args)#尝试result输出第一种方法时添加
+        self.orig_img, self.test_img, self.test_mask, self.test_data_count = load_test_data(args)# comment when testing
+        self.orig_img, self.test_img, self.test_mask, self.test_data_count = load_result_data(args)# comment when testing
 
-        # self.single_orig = tf.placeholder(tf.float32, (args.batch_size, args.input_height, args.input_width, 3))#上面两行代码替换这两行避免placeholder无法传参
-        # self.single_test = tf.placeholder(tf.float32, (args.batch_size, args.input_height, args.input_width, 3))#下面求self.test_res_imgs时修改
+        # self.single_orig = tf.placeholder(tf.float32, (args.batch_size, args.input_height, args.input_width, 3))# replaced with this when testing
+        # self.single_test = tf.placeholder(tf.float32, (args.batch_size, args.input_height, args.input_width, 3))# replaced with this when testing
         self.single_mask = tf.placeholder(tf.float32, (args.batch_size, args.input_height, args.input_width, 3))
 
         self.build_model()
@@ -51,9 +51,9 @@ class network():
         self.recon_img, self.g_nets = self.completion_net(self.perturbed_img, name="completion_net")
         self.recon_img = (1-self.mask)*self.real_img + self.mask*self.recon_img
 
-        self.test_res_imgs, _ = self.completion_net(self.test_img, name="completion_net", reuse=True) #输出为conv11
+        self.test_res_imgs, _ = self.completion_net(self.test_img, name="completion_net", reuse=True) #conv11
         self.test_res_imgs = (1-self.test_mask)*self.orig_img + self.test_mask*self.test_res_imgs
-        # self.test_res_imgs, _ = self.completion_net(self.single_test, name="completion_net", reuse=True) #原来代码
+        # self.test_res_imgs, _ = self.completion_net(self.single_test, name="completion_net", reuse=True) #the original code
         # self.test_res_imgs = (1-self.single_mask)*self.single_orig + self.single_mask*self.test_res_imgs
 
         self.r_local_imgs = []
