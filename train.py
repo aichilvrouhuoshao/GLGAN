@@ -1,8 +1,8 @@
 import tensorflow as tf
 import numpy as np
-from config import *
+from parameter import *
 from network import *
-from ops import *
+from loaddata import *
 
 def train(args, sess, model):
     #Adam optimizers are used instead of AdaDelta
