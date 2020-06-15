@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 
 def batch_norm(input, name="batch_norm"):
-    with tf.variable_scope(name) as scope:   #变量作用域
+    with tf.variable_scope(name) as scope:   #Variable scope
         input = tf.identity(input)
         channels = input.get_shape()[3]
 
