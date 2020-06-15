@@ -1,3 +1,6 @@
+# data
+The folder store the training dataset and the test dataset (not the evaluation dataset)
+
 # GLGAN
 the global and local GAN in completing the TEC maps
 
